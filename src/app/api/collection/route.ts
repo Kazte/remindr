@@ -11,15 +11,17 @@ export async function GET(request: NextRequest) {
   }
 
   const collections = await prisma.collection.findMany({
-    include: {
-      tasks: true
-    },
     where: {
       user: {
         username: session?.user?.name!
       }
+    },
+    include: {
+      tasks: true
     }
   });
+
+  console.log('get collections', collections);
 
   return NextResponse.json({ data: collections });
 }

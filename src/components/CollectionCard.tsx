@@ -5,7 +5,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '~/components/ui/collapsible';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { cn } from '~/libs/utils';
 import { CollectionColor, CollectionColors } from '~/libs/constants';
@@ -24,20 +24,22 @@ import {
 } from '~/components/ui/alert-dialog';
 import { toast } from '~/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import ICollection from '~/common/interfaces/collection.interface';
+import CreateTaskDialog from './CreateTaskDialog';
+import TaskCard from './TaskCard';
 
 interface Props {
-  collection: Collection & {
-    tasks: Task[];
-  };
+  collection: ICollection;
 }
 
 export default function CollectionCard({ collection }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
   const removeCollection = async () => {
     try {
-      console.log(collection.id);
       await fetch(`/api/collection/${collection.id}`, {
         method: 'DELETE'
       });
@@ -58,66 +60,103 @@ export default function CollectionCard({ collection }: Props) {
     }
   };
 
+  const totalTasks = collection.tasks.length;
+  const tasksDone = useMemo(() => {
+    return collection.tasks.filter((x) => x.done).length;
+  }, [collection.tasks]);
+
+  const progress =
+    collection.tasks.length === 0 ? 0 : (tasksDone / totalTasks) * 100;
+
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger asChild>
-        <Button
-          variant='ghost'
-          className={cn(
-            'flex w-full justify-between p-6',
-            isOpen && 'rounded-b-none',
-            CollectionColors[collection.color as CollectionColor]
-          )}
-        >
-          <span className='drop-shadow-[0_2px_2px_rgba(0,0,0,1)] font-bold'>
-            {collection.name}
-          </span>
-          {isOpen ? (
-            <CaretUpIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]' />
-          ) : (
-            <CaretDownIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]' />
-          )}
-        </Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className='flex flex-col rounded-b-md dark:bg-neutral-900 shadow-lg'>
-        {collection.tasks.length <= 0 ? (
-          <div>No tasks</div>
-        ) : (
-          <>
-            <Progress className='rounded-none' value={45} />
-            <div className='p-4 gap-3 flex flex-col'>
-              {collection.tasks.map((task) => (
-                <div key={task.id}>{task.content}</div>
-              ))}
-            </div>
-          </>
-        )}
-        <Separator />
-        <footer className='h-[40px] px-4 p-[2px] text-xs text-neutral-500 flex justify-between items-center'>
-          <p>Created at {collection.created_at.toLocaleDateString('en-Us')}</p>
-          <div>
-            <Button size='icon' variant='ghost'>
-              <MdAdd />
+    <>
+      <CreateTaskDialog
+        open={showCreateModal}
+        setOpen={setShowCreateModal}
+        collection={collection}
+      />
+
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className='transition'
+      >
+        <CollapsibleTrigger asChild>
+          <Button
+            variant='ghost'
+            className={cn(
+              'flex w-full justify-between p-6',
+              isOpen && 'rounded-b-none',
+              CollectionColors[collection.color as CollectionColor]
+            )}
+          >
+            <span className='drop-shadow-[0_2px_2px_rgba(0,0,0,1)] font-bold text-white'>
+              {collection.name}
+            </span>
+            {isOpen ? (
+              <CaretUpIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] text-white' />
+            ) : (
+              <CaretDownIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] text-white' />
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className='flex flex-col rounded-b-md dark:bg-neutral-900 shadow-lg'>
+          {collection.tasks.length <= 0 ? (
+            <Button
+              variant={'ghost'}
+              className='flex flex-col justify-center items-center gap-1 p-8 py-12 rounded-none'
+              onClick={() => setShowCreateModal(true)}
+            >
+              <p>There are no task created yet...</p>
+              <span className='text-sm'>Create one</span>
             </Button>
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <Button size='icon' variant='ghost'>
-                  <FiTrash />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                Are you sure you want to delete the collection?
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={removeCollection}>
-                    Proceed
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        </footer>
-      </CollapsibleContent>
-    </Collapsible>
+          ) : (
+            <>
+              <Progress className='rounded-none' value={progress} />
+              <div className='p-4 gap-3 flex flex-col'>
+                {collection.tasks
+                  .sort((a, b) => {
+                    return a.id > b.id ? -1 : 1;
+                  })
+                  .map((task) => (
+                    <TaskCard key={task.id} task={task} />
+                  ))}
+              </div>
+            </>
+          )}
+          <Separator />
+          <footer className='h-[40px] px-4 p-[2px] text-xs text-neutral-500 flex justify-between items-center'>
+            <p>
+              Created at {collection.created_at.toLocaleDateString('en-Us')}
+            </p>
+            <div>
+              <Button
+                size='icon'
+                variant='ghost'
+                onClick={() => setShowCreateModal(true)}
+              >
+                <MdAdd />
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <Button size='icon' variant='ghost'>
+                    <FiTrash />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  Are you sure you want to delete the collection?
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={removeCollection}>
+                      Proceed
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </footer>
+        </CollapsibleContent>
+      </Collapsible>
+    </>
   );
 }

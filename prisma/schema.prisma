@@ -20,7 +20,6 @@ model User {
   updated_at DateTime @updatedAt
 
   collections Collection[]
-  Task        Task[]
 }
 
 model Collection {
@@ -45,9 +44,6 @@ model Task {
   expires_at DateTime?
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
 
   collectionId Int
   Collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
