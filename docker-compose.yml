@@ -1,15 +1,16 @@
-version: '3.3
+version: '3.3'
 
 name: remindr-database-dev
 
 services:
-  mongodb:
-    image: mongo:latest
+  postgres:
     container_name: remindr-database-dev
-    ports:
-      - 27018:27017
+    image: postgres
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: p4ssw0rd
-      volumes:
-        - mongodb_data_cont:/data/db
+      - POSTGRES_DB=remindr_db
+      - POSTGRES_USER=remindr_dev
+      - POSTGRES_PASSWORD=r3m1nd3rd3v
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data

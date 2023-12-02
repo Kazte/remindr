@@ -37,16 +37,16 @@ export default function RegisterCard() {
       </CardHeader>
       <CardContent>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-          <div className='flex flex-col'>
+          <div className='flex flex-col gap-1'>
             <Label htmlFor='username'>Username</Label>
             <Input id='username' name='username' placeholder='Your Username...'/>
           </div>
-          <div className='flex flex-col'>
+          <div className='flex flex-col gap-1'>
             <Label htmlFor='email'>Email</Label>
             <Input id='email' name='email' type='email' placeholder='Your Email...'/>
           </div>
-          <div className='flex flex-col'>
-            <Label htmlFor='password'>Username</Label>
+          <div className='flex flex-col gap-1'>
+            <Label htmlFor='password'>Password</Label>
             <Input id='password' name='password' type='password' placeholder='************'/>
           </div>
 

@@ -1,0 +1,1 @@
+export const wait = (timeToSleep: number) => new Promise(res => setTimeout(res, timeToSleep));
