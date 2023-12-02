@@ -1,0 +1,15 @@
+version: '3.3
+
+name: remindr-database-dev
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: remindr-database-dev
+    ports:
+      - 27018:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: p4ssw0rd
+      volumes:
+        - mongodb_data_cont:/data/db
