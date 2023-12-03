@@ -1,19 +1,19 @@
 'use client';
-import { Collection, Task } from '@prisma/client';
+import {Collection, Task} from '@prisma/client';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
 } from '~/components/ui/collapsible';
-import { useMemo, useState } from 'react';
-import { Button } from '~/components/ui/button';
-import { cn } from '~/libs/utils';
-import { CollectionColor, CollectionColors } from '~/libs/constants';
-import { CaretDownIcon, CaretUpIcon } from '@radix-ui/react-icons';
-import { Progress } from '~/components/ui/progress';
-import { Separator } from '~/components/ui/separator';
-import { MdAdd } from 'react-icons/md';
-import { FiTrash } from 'react-icons/fi';
+import {useMemo, useState} from 'react';
+import {Button} from '~/components/ui/button';
+import {cn} from '~/libs/utils';
+import {CollectionColor, CollectionColors} from '~/libs/constants';
+import {CaretDownIcon, CaretUpIcon} from '@radix-ui/react-icons';
+import {Progress} from '~/components/ui/progress';
+import {Separator} from '~/components/ui/separator';
+import {MdAdd} from 'react-icons/md';
+import {FiTrash} from 'react-icons/fi';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,8 +22,8 @@ import {
   AlertDialogFooter,
   AlertDialogTrigger
 } from '~/components/ui/alert-dialog';
-import { toast } from '~/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
+import {toast} from '~/components/ui/use-toast';
+import {useRouter} from 'next/navigation';
 import ICollection from '~/common/interfaces/collection.interface';
 import CreateTaskDialog from './CreateTaskDialog';
 import TaskCard from './TaskCard';
@@ -32,7 +32,7 @@ interface Props {
   collection: ICollection;
 }
 
-export default function CollectionCard({ collection }: Props) {
+export default function CollectionCard({collection}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -50,7 +50,7 @@ export default function CollectionCard({ collection }: Props) {
       });
 
       router.refresh();
-    } catch (e) {
+    } catch (e: any) {
       console.log(e.message);
       toast({
         title: 'Error',
@@ -85,7 +85,7 @@ export default function CollectionCard({ collection }: Props) {
           <Button
             variant='ghost'
             className={cn(
-              'flex w-full justify-between p-6',
+              'flex w-full justify-between p-6 relative overflow-hidden',
               isOpen && 'rounded-b-none',
               CollectionColors[collection.color as CollectionColor]
             )}
@@ -94,10 +94,11 @@ export default function CollectionCard({ collection }: Props) {
               {collection.name}
             </span>
             {isOpen ? (
-              <CaretUpIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] text-white' />
+              <CaretUpIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] text-white'/>
             ) : (
-              <CaretDownIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] text-white' />
+              <CaretDownIcon className='h-6 w-6 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] text-white'/>
             )}
+            <Progress className='rounded-none absolute w-full bottom-0 left-0' value={progress}/>
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className='flex flex-col rounded-b-md dark:bg-neutral-900 shadow-lg'>
@@ -112,19 +113,18 @@ export default function CollectionCard({ collection }: Props) {
             </Button>
           ) : (
             <>
-              <Progress className='rounded-none' value={progress} />
               <div className='p-4 gap-3 flex flex-col'>
                 {collection.tasks
                   .sort((a, b) => {
-                    return a.id > b.id ? -1 : 1;
+                    return a.id > b.id ? 1 : -1;
                   })
                   .map((task) => (
-                    <TaskCard key={task.id} task={task} />
+                    <TaskCard key={task.id} task={task}/>
                   ))}
               </div>
             </>
           )}
-          <Separator />
+          <Separator/>
           <footer className='h-[40px] px-4 p-[2px] text-xs text-neutral-500 flex justify-between items-center'>
             <p>
               Created at {collection.created_at.toLocaleDateString('en-Us')}
@@ -135,12 +135,12 @@ export default function CollectionCard({ collection }: Props) {
                 variant='ghost'
                 onClick={() => setShowCreateModal(true)}
               >
-                <MdAdd />
+                <MdAdd/>
               </Button>
               <AlertDialog>
                 <AlertDialogTrigger>
                   <Button size='icon' variant='ghost'>
-                    <FiTrash />
+                    <FiTrash/>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

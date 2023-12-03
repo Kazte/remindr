@@ -26,7 +26,7 @@ export default function RootLayout({
     <Providers>
       <NavBar/>
       <Separator/>
-      <main className='flex flex-grow justify-center items-center p-4 w-full'>
+      <main className='flex flex-grow items-center p-4 w-full'>
         {children}
         <Toaster/>
       </main>

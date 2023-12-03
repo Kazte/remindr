@@ -4,13 +4,14 @@ import Link from 'next/link';
 import AvatarNavBar from '~/components/AvatarNavBar';
 import {getServerSession} from 'next-auth';
 import {Button} from '~/components/ui/button';
+import {getCurrentUser} from '~/libs/session';
 
 export default async function NavBar() {
 
-  const session = await getServerSession();
+  const user = await getCurrentUser();
 
 
-  if (!session){
+  if (!user) {
     return (
       <nav className='flex items-center justify-between w-full h-[60px] p-4 px-8'>
         <Link href='/' className='text-2xl font-bold'>remindr.</Link>
@@ -25,7 +26,6 @@ export default async function NavBar() {
               Sign Up
             </Button>
           </Link>
-          <ThemeSwitcher/>
         </div>
       </nav>
     );
@@ -35,8 +35,7 @@ export default async function NavBar() {
     <nav className='flex items-center justify-between w-full h-[60px] p-4 px-8'>
       <Link href='/' className='text-2xl font-bold'>remindr.</Link>
       <div className='flex items-center gap-2'>
-        <AvatarNavBar/>
-        <ThemeSwitcher/>
+        <AvatarNavBar user={user}/>
       </div>
     </nav>
   );

@@ -14,13 +14,13 @@ import {
   FormLabel,
   FormMessage
 } from '~/components/ui/form';
-import { useForm } from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import {
   createCollectionSchema,
   createCollectionSchemaType
 } from '~/libs/schemas/createCollection';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '~/components/ui/input';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {Input} from '~/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -28,20 +28,20 @@ import {
   SelectTrigger,
   SelectValue
 } from '~/components/ui/select';
-import { CollectionColor, CollectionColors } from '~/libs/constants';
-import { cn } from '~/libs/utils';
-import { Separator } from '~/components/ui/separator';
-import { Button } from '~/components/ui/button';
-import { toast } from '~/components/ui/use-toast';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { useRouter } from 'next/navigation';
+import {CollectionColor, CollectionColors} from '~/libs/constants';
+import {cn} from '~/libs/utils';
+import {Separator} from '~/components/ui/separator';
+import {Button} from '~/components/ui/button';
+import {toast} from '~/components/ui/use-toast';
+import {ReloadIcon} from '@radix-ui/react-icons';
+import {useRouter} from 'next/navigation';
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export default function CreateCollectionSidebar({ open, onOpenChange }: Props) {
+export default function CreateCollectionSidebar({open, onOpenChange}: Props) {
   const form = useForm<createCollectionSchemaType>({
     defaultValues: {},
     resolver: zodResolver(createCollectionSchema)
@@ -63,7 +63,6 @@ export default function CreateCollectionSidebar({ open, onOpenChange }: Props) {
       toast({
         title: 'Success',
         description: 'Collection create successfully!',
-        variant: 'destructive'
       });
     } catch (e) {
       // @ts-ignore
@@ -95,14 +94,14 @@ export default function CreateCollectionSidebar({ open, onOpenChange }: Props) {
             <FormField
               control={form.control}
               name='name'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input placeholder='Personal' {...field} />
                   </FormControl>
                   <FormDescription>Collection name</FormDescription>
-                  <FormMessage />
+                  <FormMessage/>
                 </FormItem>
               )}
             />
@@ -110,7 +109,7 @@ export default function CreateCollectionSidebar({ open, onOpenChange }: Props) {
             <FormField
               control={form.control}
               name='color'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Color</FormLabel>
                   <FormControl>
@@ -145,21 +144,21 @@ export default function CreateCollectionSidebar({ open, onOpenChange }: Props) {
                     </Select>
                   </FormControl>
                   <FormDescription>Collection name</FormDescription>
-                  <FormMessage />
+                  <FormMessage/>
                 </FormItem>
               )}
             />
           </form>
         </Form>
         <div className='flex flex-col gap-3 mt-4'>
-          <Separator orientation='horizontal' />
+          <Separator orientation='horizontal'/>
           <Button
             disabled={form.formState.isSubmitting}
             onClick={form.handleSubmit(onSubmit)}
           >
             Confirm{' '}
             {form.formState.isSubmitting && (
-              <ReloadIcon className='ml-2 h-4 w-4 animate-spin' />
+              <ReloadIcon className='ml-2 h-4 w-4 animate-spin'/>
             )}
           </Button>
         </div>

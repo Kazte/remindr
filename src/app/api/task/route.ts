@@ -1,13 +1,13 @@
-import { getServerSession } from 'next-auth';
-import { NextRequest, NextResponse } from 'next/server';
+import {getServerSession} from 'next-auth';
+import {NextRequest, NextResponse} from 'next/server';
 import prisma from '~/libs/prisma';
-import { authOptions } from '../auth/[...nextauth]/route';
+import {authOptions} from '../auth/[...nextauth]/route';
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return NextResponse.json({ data: null }, { status: 400 });
+    return NextResponse.json({data: null}, {status: 400});
   }
 
   const data = await request.json();
@@ -24,24 +24,24 @@ export async function POST(request: NextRequest) {
     }
   });
 
-  return NextResponse.json({ message: 'ok' });
+  return NextResponse.json({message: 'ok'});
 }
 
 export async function PATCH(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return NextResponse.json({ data: null }, { status: 400 });
+    return NextResponse.json({data: null}, {status: 400});
   }
 
   const data = await request.json();
 
   await prisma.task.update({
-    where: { id: data.id },
+    where: {id: data.id},
     data: {
       done: data.done
     }
   });
 
-  return NextResponse.json({ message: 'ok' });
+  return NextResponse.json({message: 'ok'});
 }

@@ -1,16 +1,18 @@
-import { getServerSession } from 'next-auth';
-import prisma from '~/libs/prisma';
-import { Alert, AlertDescription, AlertTitle } from '~/components/ui/alert';
+import {getServerSession} from 'next-auth';
+import db from '~/libs/prisma';
+import {Alert, AlertDescription, AlertTitle} from '~/components/ui/alert';
 import CreateCollectionButton from '~/components/CreateCollectionButton';
 import CollectionCard from '~/components/CollectionCard';
+import {getCurrentUser} from '~/libs/session';
 
 export default async function DashboardPage() {
-  const session = await getServerSession();
-  const username = session?.user?.name;
+  const user = await getCurrentUser();
 
-  const collections = await prisma.collection.findMany({
+  const username = user?.name;
+
+  const collections = await db.collection.findMany({
     where: {
-      user: { username: username! }
+      user: {email: user.email}
     },
     include: {
       tasks: true
@@ -20,7 +22,7 @@ export default async function DashboardPage() {
   if (collections.length === 0) {
     return (
       <div className='flex flex-col gap-5 w-full'>
-        <CreateCollectionButton />
+        <CreateCollectionButton/>
         <Alert>
           <AlertTitle>There are no collections</AlertTitle>
           <AlertDescription>
@@ -33,10 +35,10 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <CreateCollectionButton />
+      <CreateCollectionButton/>
       <div className='flex flex-col gap-4 mt-6'>
         {collections.map((collection) => (
-          <CollectionCard key={collection.id} collection={collection} />
+          <CollectionCard key={collection.id} collection={collection}/>
         ))}
       </div>
     </>

@@ -1,11 +1,11 @@
 'use client';
 
-import { Task } from '@prisma/client';
-import { Checkbox } from './ui/checkbox';
-import * as FormatDate from 'date-fns';
-import { cn } from '~/libs/utils';
-import { useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import {Task} from '@prisma/client';
+import {Checkbox} from './ui/checkbox';
+import {cn} from '~/libs/utils';
+import {useTransition} from 'react';
+import {useRouter} from 'next/navigation';
+import {format} from 'date-fns';
 
 interface Props {
   task: Task;
@@ -21,7 +21,7 @@ function getExpirationColor(expires_at: Date) {
   return 'text-green-500 dark:text-green-400';
 }
 
-export default function TaskCard({ task }: Props) {
+export default function TaskCard({task}: Props) {
   const [isLoading, startTransition] = useTransition();
   const router = useRouter();
 
@@ -40,7 +40,7 @@ export default function TaskCard({ task }: Props) {
   };
 
   return (
-    <div className='flex gap-3 items-start'>
+    <div className='flex gap-3 items-start w-full '>
       <Checkbox
         disabled={isLoading}
         id={task.id.toString()}
@@ -51,7 +51,7 @@ export default function TaskCard({ task }: Props) {
       <label
         htmlFor={task.id.toString()}
         className={cn(
-          'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 decoration-1 dark:decoration-white',
+          'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 decoration-1 dark:decoration-white w-full cursor-pointer',
           task.done && 'line-through'
         )}
       >
@@ -63,7 +63,7 @@ export default function TaskCard({ task }: Props) {
               getExpirationColor(task.expires_at)
             )}
           >
-            {FormatDate.format(task.expires_at, 'dd/MM/yyyy')}
+            {format(task.expires_at, 'dd/MM/yyyy')}
           </p>
         )}
       </label>

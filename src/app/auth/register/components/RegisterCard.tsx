@@ -3,8 +3,15 @@ import {Card, CardContent, CardFooter, CardHeader, CardTitle} from '~/components
 import {Label} from '~/components/ui/label';
 import {Input} from '~/components/ui/input';
 import {Button} from '~/components/ui/button';
+import {useState, useTransition} from 'react';
+import {ReloadIcon} from '@radix-ui/react-icons';
+import {wait} from '~/libs/wait';
 
 export default function RegisterCard() {
+
+  const [isLoading, startTransition] = useTransition();
+  const [error, setError] = useState('');
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -15,20 +22,28 @@ export default function RegisterCard() {
       email: data.get('email'),
       password: data.get('password'),
     });
+    startTransition(async () => {
 
-    fetch('/api/auth/register', {
-      method: 'POST',
-      body: userData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-      .then(responseData => {
-        console.log(responseData);
-      }).catch(err => {
-      console.log('error register', err.message);
+      fetch('/api/auth/register', {
+        method: 'POST',
+        body: userData,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(res => res.json())
+        .then(responseData => {
+
+          if (responseData.message) {
+            setError(responseData.message);
+          }
+
+          console.log(responseData);
+        }).catch(err => {
+        console.log('error register', err.message);
+      });
     });
   };
+
 
   return (
     <Card className='w-[350px]'>
@@ -49,11 +64,13 @@ export default function RegisterCard() {
             <Label htmlFor='password'>Password</Label>
             <Input id='password' name='password' type='password' placeholder='************'/>
           </div>
+          <p className='text-sm text-red-600'>{error}</p>
 
-          <Button type='submit'>Register</Button>
+          <Button disabled={isLoading} type='submit'>Register {isLoading && (
+            <ReloadIcon className='ml-2 h-4 w-4 animate-spin'/>
+          )}</Button>
         </form>
       </CardContent>
-
     </Card>
   );
-}
+};

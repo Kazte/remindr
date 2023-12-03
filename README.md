@@ -2,6 +2,20 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+### Env Local
+
+```dotenv
+#.env.local
+
+DATABASE_URL=""
+NEXTAUTH_URL=""
+NEXTAUTH_SECRET=""
+DISCORD_CLIENT_ID=""
+DISCORD_CLIENT_SECRET=""
+GITHUB_ID=""
+GITHUB_SECRET=""
+```
+
 First, run the development server:
 
 ```bash

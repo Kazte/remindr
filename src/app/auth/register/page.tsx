@@ -12,6 +12,9 @@ function Select(props: { children: ReactNode }) {
 
 export default function RegisterPage() {
   return (
-    <RegisterCard/>
+    <div className='w-full grid place-content-center'>
+      <RegisterCard/>
+    </div>
+    
   );
 }

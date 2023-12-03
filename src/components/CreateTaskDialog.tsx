@@ -6,15 +6,14 @@ import {
   DialogDescription,
   DialogTitle
 } from './ui/dialog';
-import { AlertDialogFooter, AlertDialogHeader } from './ui/alert-dialog';
-import { cn } from '~/libs/utils';
-import { CollectionColors } from '~/libs/constants';
-import { useForm } from 'react-hook-form';
+import {AlertDialogFooter, AlertDialogHeader} from './ui/alert-dialog';
+import {cn} from '~/libs/utils';
+import {useForm} from 'react-hook-form';
 import {
   createTaskSchema,
   createTaskSchemaType
 } from '~/libs/schemas/createTask';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {zodResolver} from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -24,15 +23,14 @@ import {
   FormLabel,
   FormMessage
 } from './ui/form';
-import { Textarea } from './ui/textarea';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Calendar } from './ui/calendar';
-import { Button } from './ui/button';
-import { CalendarIcon, ReloadIcon } from '@radix-ui/react-icons';
-import * as FormatDate from 'date-fns';
-import Loader from './Loader';
-import { toast } from './ui/use-toast';
-import { useRouter } from 'next/navigation';
+import {Textarea} from './ui/textarea';
+import {Popover, PopoverContent, PopoverTrigger} from './ui/popover';
+import {Calendar} from './ui/calendar';
+import {Button} from './ui/button';
+import {CalendarIcon, ReloadIcon} from '@radix-ui/react-icons';
+import {toast} from './ui/use-toast';
+import {useRouter} from 'next/navigation';
+import {format} from 'date-fns';
 
 interface Props {
   open: boolean;
@@ -40,7 +38,7 @@ interface Props {
   collection: ICollection;
 }
 
-export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
+export default function CreateTaskDialog({open, setOpen, collection}: Props) {
   const router = useRouter();
 
   const form = useForm<createTaskSchemaType>({
@@ -96,17 +94,18 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
               <FormField
                 control={form.control}
                 name='content'
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem>
                     <FormLabel>Content</FormLabel>
                     <FormControl>
                       <Textarea
+                        className='resize-none'
                         rows={5}
                         placeholder='Task content...'
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage/>
                   </FormItem>
                 )}
               />
@@ -114,7 +113,7 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
               <FormField
                 control={form.control}
                 name='expires_at'
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem>
                     <FormLabel>Expires At</FormLabel>
                     <FormDescription>
@@ -130,10 +129,10 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
                               !field.value && 'text-muted-foreground'
                             )}
                           >
-                            <CalendarIcon className='mr-2 h-4 w-4' />
+                            <CalendarIcon className='mr-2 h-4 w-4'/>
                             {field.value ? (
                               <span>
-                                {FormatDate.format(field.value, 'PPP')}
+                                {format(field.value, 'PPP')}
                               </span>
                             ) : (
                               <span>No Expiration</span>
@@ -150,7 +149,7 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
                         </PopoverContent>
                       </Popover>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage/>
                   </FormItem>
                 )}
               />
@@ -165,7 +164,7 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
           >
             Confirm
             {form.formState.isSubmitting && (
-              <ReloadIcon className='animate-spin h-4 w-4 ml-2' />
+              <ReloadIcon className='animate-spin h-4 w-4 ml-2'/>
             )}
           </Button>
         </AlertDialogFooter>
