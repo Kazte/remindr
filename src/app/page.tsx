@@ -15,7 +15,7 @@ export default async function Home() {
           You can save reminders and set an expiration date for them.
         </h2>
         <h2 className='text-3xl text-center font-semibold'>
-          Don't forget to complete them before the specified date 😿
+          Don&apos;t forget to complete them before the specified date 😿
         </h2>
         <div className='flex items-center justify-evenly gap-2 max-w-[560px]'>
           <Link href='/auth/login' className='w-full'>
