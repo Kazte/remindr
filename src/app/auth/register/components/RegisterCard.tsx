@@ -10,7 +10,7 @@ import {wait} from '~/libs/wait';
 export default function RegisterCard() {
 
   const [isLoading, startTransition] = useTransition();
-  const [error, setError] = useState('');
+  const [error, setError] = useState();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

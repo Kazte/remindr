@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 export default CredentialProvider({
   name: 'Credentials',
   credentials: {
-    username: {label: 'Username', type: 'text', placeholder: 'username'},
+    username: {label: 'Email', type: 'email', placeholder: 'email'},
     password: {
       label: 'Password',
       type: 'password',
@@ -15,7 +15,9 @@ export default CredentialProvider({
   },
   async authorize(credentials: any, _req) {
     const userFound = await prisma.user.findUnique({
-      where: {username: credentials?.username}
+      where: {
+        email: credentials?.email
+      }
     });
 
     if (!userFound) throw new Error('User not found!');

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       color: data.color,
       user: {
         connect: {
-          email: session?.user?.email!
+          email: session?.user?.email!,
         }
       }
     }

@@ -4,15 +4,17 @@ import {Label} from '~/components/ui/label';
 import {Input} from '~/components/ui/input';
 import {Button} from '~/components/ui/button';
 import {signIn} from 'next-auth/react';
-import {useRouter} from 'next/navigation';
+import {useRouter, useSearchParams} from 'next/navigation';
 import {Separator} from '~/components/ui/separator';
 import {DiscordLogoIcon, GitHubLogoIcon, ReloadIcon} from '@radix-ui/react-icons';
-import {useTransition} from 'react';
+import {useState, useTransition} from 'react';
 
 export default function LoginCard() {
   const router = useRouter();
 
   const [isLoading, startTransition] = useTransition();
+
+  const [error, setError] = useState();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,7 +23,7 @@ export default function LoginCard() {
       const data = new FormData(e.currentTarget);
 
       const userData = {
-        username: data.get('username'),
+        email: data.get('email'),
         password: data.get('password'),
         redirect: false
       };
@@ -30,11 +32,15 @@ export default function LoginCard() {
       try {
         await signIn('credentials', userData);
 
+        console.log('loginn');
+
         router.push('/dashboard');
         router.refresh();
       } catch (e) {
         // @ts-ignore
         console.log(e.message);
+
+        setError(e.message);
       }
     });
 
@@ -68,13 +74,15 @@ export default function LoginCard() {
         <Separator content='OR CONTINUE WITH'/>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
           <div className='flex flex-col gap-1'>
-            <Label htmlFor='username'>Username</Label>
-            <Input id='username' name='username' placeholder='Your Username...'/>
+            <Label htmlFor='email'>Email</Label>
+            <Input id='email' name='email' placeholder='Your email...'/>
           </div>
           <div className='flex flex-col gap-1'>
             <Label htmlFor='password'>Password</Label>
             <Input id='password' name='password' type='password' placeholder='************'/>
           </div>
+
+          <p>{error}</p>
 
           <Button disabled={isLoading} type='submit'>Login {isLoading && (
             <ReloadIcon className='ml-2 h-4 w-4 animate-spin'/>

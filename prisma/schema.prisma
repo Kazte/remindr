@@ -12,7 +12,7 @@ datasource prisma {
 
 model User {
   id       Int     @id @default(autoincrement())
-  email    String
+  email    String  @unique
   username String
   password String?
   image    String?
@@ -21,8 +21,6 @@ model User {
   updated_at DateTime @updatedAt
 
   collections Collection[]
-
-  @@unique([email, username])
 }
 
 model Collection {

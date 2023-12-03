@@ -15,7 +15,8 @@ export const authOptions = {
   },
   // adapter: PrismaAdapter(prisma),
   pages: {
-    signIn: '/auth/login'
+    signIn: '/auth/login',
+    error: '/auth/error'
   },
   callbacks: {
     async session({token, session}) {
@@ -53,17 +54,23 @@ export const authOptions = {
     async signIn({user, account, profile}) {
       console.log('user', user);
       console.log('acc', account);
+      console.log('profile', profile);
 
       if (account.provider === 'github') {
-        console.log('GITHUBB', profile.login);
         user.username = profile.login;
       }
 
+      if (account.provider === 'discord') {
+        user.username = user.name;
+      }
+
       try {
+        const userFound = await prisma.user.findUnique({
+          where: {
+            email: user.email,
+          }
+        });
 
-        const userFound = await prisma.user.findUnique({where: {username: user.username, email: user.email}});
-
-        console.log('userfound', userFound);
         if (userFound) {
           return true;
         }
