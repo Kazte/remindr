@@ -84,7 +84,7 @@ export const authOptions: AuthOptions = {
         });
 
         return true;
-      } catch (e) {
+      } catch (e: any) {
         console.log('error signin', e.message);
         return false;
       }

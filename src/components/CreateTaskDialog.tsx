@@ -62,7 +62,7 @@ export default function CreateTaskDialog({open, setOpen, collection}: Props) {
 
       openChangeWrapper(false);
       router.refresh();
-    } catch (e) {
+    } catch (e: any) {
       toast({
         title: 'Error',
         description: 'Cannot create Task',

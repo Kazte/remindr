@@ -36,7 +36,7 @@ export default function LoginCard() {
 
         router.push('/dashboard');
         router.refresh();
-      } catch (e) {
+      } catch (e: any) {
         // @ts-ignore
         console.log(e.message);
 

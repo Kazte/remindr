@@ -64,7 +64,7 @@ export default function CreateCollectionSidebar({open, onOpenChange}: Props) {
         title: 'Success',
         description: 'Collection create successfully!',
       });
-    } catch (e) {
+    } catch (e:any) {
       // @ts-ignore
       console.log('error collection', e.message);
       toast({
