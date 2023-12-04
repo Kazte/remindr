@@ -13,6 +13,7 @@ export default CredentialProvider({
       placeholder: 'password'
     }
   },
+  // @ts-ignore
   async authorize(credentials: any) {
     const userFound = await prisma.user.findUnique({
       where: {
