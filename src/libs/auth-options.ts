@@ -4,6 +4,7 @@ import DiscordProvider from '~/app/api/auth/[...nextauth]/(providers)/discord.pr
 import GithubProvider from '~/app/api/auth/[...nextauth]/(providers)/github.provider';
 import prisma from '~/libs/prisma';
 
+
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider,
@@ -19,7 +20,7 @@ export const authOptions: AuthOptions = {
     error: '/auth/error'
   },
   callbacks: {
-    async session({token, session}) {
+    async session({token, session}: { token: any, session: any }) {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;
@@ -32,7 +33,7 @@ export const authOptions: AuthOptions = {
     async jwt({token, user}) {
       const dbUser = await prisma.user.findFirst({
         where: {
-          email: token.email,
+          email: token.email!,
         },
       });
 
@@ -51,16 +52,17 @@ export const authOptions: AuthOptions = {
       };
     },
     // async signIn({profile}) {
-    async signIn({user, account, profile}) {
+    // @ts-ignore
+    async signIn({user, account, profile}: { user: any, account: any, profile: any }) {
       console.log('user', user);
       console.log('acc', account);
       console.log('profile', profile);
 
-      if (account.provider === 'github') {
+      if (account?.provider === 'github') {
         user.username = profile.login;
       }
 
-      if (account.provider === 'discord') {
+      if (account?.provider === 'discord') {
         user.username = user.name;
       }
 
