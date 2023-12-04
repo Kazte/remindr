@@ -13,7 +13,7 @@ export default CredentialProvider({
       placeholder: 'password'
     }
   },
-  async authorize(credentials: any, _req) {
+  async authorize(credentials: any) {
     const userFound = await prisma.user.findUnique({
       where: {
         email: credentials?.email
@@ -22,9 +22,9 @@ export default CredentialProvider({
 
     if (!userFound) throw new Error('User not found!');
 
-    const passwordMatch = await bcrypt.compare(
+    const passwordMatch = bcrypt.compare(
       credentials?.password,
-      userFound.password
+      userFound?.password!
     );
 
     if (!passwordMatch) throw new Error('Invalid Credentials');
